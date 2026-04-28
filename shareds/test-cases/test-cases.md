@@ -1,268 +1,60 @@
 # Canvas Magic 测试用例
 
 > 小白用户的一句话描述 → 精美的设计产出
-> 场景：网页、PPT、App 原型
 
 ---
 
-## 网页设计测试
-
-### TC-001: SaaS 登录页
+## TC-001: SaaS 登录页
 ```json
 {
   "id": 1,
-  "prompt": "帮我做一个 AI 写作工具的登录页面",
-  "expected": "匹配 Minimal Product 或 Dark Luxury 风格；包含 logo、标题、副标题、登录表单、CTA 按钮；背景有 subtle 动画（粒子或渐变流动）；不用紫渐变/emoji/Inter 等 AI slop",
-  "tests": "风格选择合理 + 布局完整 + 背景动画 + 反 AI slop"
+  "prompt": "我想做一个SaaS产品的登录页面，给我3个风格方向对比看看",
+  "expected": "触发clarifying questions问design context/brand；产出3个variation的design_canvas；不用紫渐变/emoji/Inter等AI slop；有具体理由说明每个variation的差异维度",
+  "tests": "workflow问问题 + variations逻辑 + 反AI slop清单 + design_canvas使用"
 }
 ```
 
-### TC-002: 产品落地页
+## TC-002: 创业 Pitch Deck
 ```json
 {
   "id": 2,
-  "prompt": "做一个数据分析 SaaS 的首页，要高级感",
-  "expected": "匹配 Dark Luxury 风格；Hero 区域有 3D 元素或动态背景；包含导航、Hero、Features、Pricing、Footer；深色主题；金色或蓝色强调色",
-  "tests": "高级感配色 + 完整页面结构 + 动态元素 + 信息层次"
+  "prompt": "帮我做一份10页的产品pitch deck，讲一个AI工具的创业项目",
+  "expected": "用deck_stage.js起手；先口头vocalize设计系统（色彩/字型/layout节奏）等确认；Section divider/content/data/quote多种layout交替；字号≥24px；1-indexed labels",
+  "tests": "Junior Designer先汇报再做 + deck_stage使用 + 视觉节奏 + scale规范"
 }
 ```
 
-### TC-003: 个人作品集
+## TC-003: 产品介绍动画
 ```json
 {
   "id": 3,
-  "prompt": "我是设计师，帮我做一个个人网站展示作品",
-  "expected": "匹配 Editorial / Swiss Grid 风格；大量留白；图片展示为主；简洁导航；交互式 hover 效果； serif 字体用于标题",
-  "tests": "设计师气质 + 图片展示 + 交互细节 + 字体搭配"
+  "prompt": "做个30秒的HTML动画，讲神经网络怎么工作",
+  "expected": "用animations.jsx的Stage+Sprite；先写时间轴再写组件；入场easeOut出场easeIn；分phase讲故事而不是堆动画；文字停留≥3秒",
+  "tests": "animations工作流 + easing正确 + 节奏设计 + 时长控制"
 }
 ```
 
-### TC-004: 电商产品页
+## TC-004: 习惯追踪 App
 ```json
 {
   "id": 4,
-  "prompt": "做一个卖蓝牙耳机的产品页面",
-  "expected": "匹配 Minimal Product 风格；产品大图居中；价格、规格、评价、购买按钮；图片轮播或 3D 展示；清晰的 CTA",
-  "tests": "产品展示 + 购买流程清晰 + 视觉焦点 + 信息完整"
+  "prompt": "做一个 Habit Tracker App 原型",
+  "expected": "问用户要 overview 平铺 or flow demo（默认走 overview）；用 assets/ios_frame.jsx，不手写 Dynamic Island；Tracker 属高密度型，每屏 ≥ 3 处信息密度元素（习惯完成率、连续天数、趋势曲线、成就badge等，非装饰）；至少 5-7 屏并排（首页/新建习惯/详情/统计/设置）",
+  "tests": "overview/flow 形态路由 + ios_frame 硬绑定 + 信息密度分型（高密度型）+ 多屏并排"
 }
 ```
 
----
-
-## PPT / Deck 测试
-
-### TC-005: 创业 Pitch Deck
+## TC-005: 读书笔记 App
 ```json
 {
   "id": 5,
-  "prompt": "帮我做一个 AI 工具创业项目的 pitch deck，10 页",
-  "expected": "匹配 Dark Luxury 或 Tech 风格；包含封面/问题/方案/产品/市场/商业模式/团队/融资/路线图/结尾；每页有视觉焦点；字号 ≥ 24px；色彩统一",
-  "tests": "页面结构完整 + 视觉节奏 + 信息密度适中 + 讲故事逻辑"
-}
-```
-
-### TC-006: 产品发布会
-```json
-{
-  "id": 6,
-  "prompt": "做一个新产品发布的演示文稿，要震撼感",
-  "expected": "匹配 Dark Luxury 风格；深色背景；大字标题；全屏图片；动画过渡；每页一个核心信息；情感化设计",
-  "tests": "震撼感 + 信息聚焦 + 动画节奏 + 情感传达"
-}
-```
-
-### TC-007: 季度汇报
-```json
-{
-  "id": 7,
-  "prompt": "做一个公司季度业绩汇报的 PPT",
-  "expected": "匹配 Dashboard 风格；数据可视化图表；KPI 卡片；趋势图；专业配色；清晰的数据层次",
-  "tests": "数据可视化 + 专业感 + 信息层次 + 配色稳重"
-}
-```
-
----
-
-## App 原型测试
-
-### TC-008: 习惯追踪 App
-```json
-{
-  "id": 8,
-  "prompt": "做一个 Habit Tracker App 原型",
-  "expected": "overview 平铺展示；ios_frame.jsx；高密度信息（习惯完成率、连续天数、趋势曲线、成就 badge）；至少 5-7 屏（首页/新建习惯/详情/统计/设置）",
-  "tests": "overview 形态 + ios_frame + 信息密度 ≥ 3 处 + 多屏并排"
-}
-```
-
-### TC-009: 读书笔记 App
-```json
-{
-  "id": 9,
   "prompt": "做一个读书笔记 App 原型",
-  "expected": "overview 平铺为主；ios_frame.jsx；内容展示类，笔记列表页 ≥ 3 层信息（书籍、引文、标签、进度）；至少 4-6 屏（书架/笔记详情/标注/搜索/管理）；字体优先 serif display",
-  "tests": "overview 默认 + ios_frame + 信息层次 + 内容为主"
+  "expected": "overview 平铺为主；ios_frame.jsx；读书笔记偏内容展示类，信息密度要求不如 Tracker 极端，但笔记列表页仍需 ≥ 3 层信息（书籍、引文、标签、进度）；至少 4-6 屏（首页书架/笔记详情/标注高亮/搜索/笔记本管理）；字体优先 serif display",
+  "tests": "overview 默认 + ios_frame + 信息层次 + 内容为主的视觉节奏"
 }
 ```
-
-### TC-010: 跑步记录 App
-```json
-{
-  "id": 10,
-  "prompt": "做一个跑步记录 App 原型",
-  "expected": "overview 平铺；ios_frame.jsx；高密度型（地图、配速曲线、心率区间、每公里分段）；每屏 ≥ 3 处差异化信息；至少 5 屏（总览/实时数据/路线/历史/统计）",
-  "tests": "overview + ios_frame + 高密度数据可视化 + 地图图表混排"
-}
-```
-
-### TC-011: 社交 App
-```json
-{
-  "id": 11,
-  "prompt": "做一个类似 Instagram 的社交 App 原型",
-  "expected": "overview 平铺；ios_frame.jsx；图片为主的内容流；底部导航；双列瀑布流或单列 feed；至少 5 屏（首页/发现/发布/消息/个人）",
-  "tests": "ios_frame + 图片展示 + 导航结构 + 社交元素"
-}
-```
-
-### TC-012: 外卖 App
-```json
-{
-  "id": 12,
-  "prompt": "做一个外卖点餐 App 原型",
-  "expected": "flow demo 或 overview；ios_frame.jsx；高密度信息（商家列表、菜品、价格、评分、配送时间）；至少 6 屏（首页/商家/菜单/购物车/订单/个人）",
-  "tests": "ios_frame + 信息密度 + 购物流程 + 多屏覆盖"
-}
-```
-
----
-
-## 动效 / 演示测试
-
-### TC-013: 产品介绍动画
-```json
-{
-  "id": 13,
-  "prompt": "做一个 30 秒的产品功能介绍动画",
-  "expected": "HTML 动画；分 phase 讲故事（问题→方案→功能→结尾）；文字停留 ≥ 3 秒；入场 easeOut 出场 easeIn；节奏感强",
-  "tests": "时间轴设计 + easing 正确 + 节奏 + 时长控制"
-}
-```
-
-### TC-014: 数据可视化动画
-```json
-{
-  "id": 14,
-  "prompt": "做一个展示用户增长数据的动画图表",
-  "expected": "Canvas 或 SVG 动画；柱状图/折线图动态绘制；数字滚动效果；颜色区分正负增长；可循环播放",
-  "tests": "图表类型 + 动画流畅 + 数据清晰 + 可视化规范"
-}
-```
-
-### TC-015: 加载动画
-```json
-{
-  "id": 15,
-  "prompt": "做一个好看的加载动画，品牌色是蓝色",
-  "expected": "CSS 动画或 Canvas；品牌蓝 #0066ff 或类似；循环动画；不卡顿；适配不同背景色",
-  "tests": "品牌色使用 + 动画循环 + 性能 + 适配性"
-}
-```
-
----
-
-## 风格对比测试
-
-### TC-016: 同需求多风格
-```json
-{
-  "id": 16,
-  "prompt": "我想做一个 SaaS 产品的登录页面，给我 3 个风格方向对比看看",
-  "expected": "产出 3 个 variation；每个有明确风格差异维度（深色/浅色、极简/丰富、静态/动态）；有具体理由说明每个 variation 的差异；不用 AI slop",
-  "tests": "variations 逻辑 + 差异维度明确 + 理由充分 + 反 AI slop"
-}
-```
-
-### TC-017: App 原型多风格
-```json
-{
-  "id": 17,
-  "prompt": "做一个健身 App 原型，给我 2 种风格选择",
-  "expected": "2 个 variation；风格差异（暗黑运动风 vs 清新健康风）；ios_frame.jsx；信息密度一致；视觉语言不同",
-  "tests": "风格对比 + 信息密度一致 + 视觉差异明显"
-}
-```
-
----
-
-## 边界情况测试
-
-### TC-018: 模糊描述
-```json
-{
-  "id": 18,
-  "prompt": "帮我做一个好看的网页",
-  "expected": "不崩溃；问用户澄清问题（什么类型？给谁看？什么风格？）；或给出合理的默认方案",
-  "tests": "澄清问题 + 默认方案合理 + 不报错"
-}
-```
-
-### TC-019: 极简需求
-```json
-{
-  "id": 19,
-  "prompt": "一个按钮就行",
-  "expected": "不低估需求；给出一个精美的按钮组件；包含 hover 状态、点击反馈、多种样式变体",
-  "tests": "组件质量 + 状态完整 + 视觉精致"
-}
-```
-
-### TC-020: 复杂需求
-```json
-{
-  "id": 20,
-  "prompt": "做一个完整的电商网站，包含首页、商品列表、详情页、购物车、用户中心",
-  "expected": "不被吓到；合理拆解；先做核心页面；给出优先级建议；质量 > 数量",
-  "tests": "需求拆解 + 优先级 + 核心页面质量 + 可扩展性"
-}
-```
-
----
-
-## 反 AI Slop 检查清单
-
-每个测试用例都应检查：
-
-- [ ] **不用紫渐变**：除非用户明确要求紫色
-- [ ] **不用 Inter 字体**：除非用户明确要求
-- [ ] **不用 emoji 装饰**：保持专业
-- [ ] **不用默认圆角 16px**：根据风格选择
-- [ ] **不用通用 box-shadow**：避免千篇一律
-- [ ] **不用 Lorem ipsum**：用真实的文案
-- [ ] **颜色有理由**：每个颜色选择有依据
-- [ ] **字体有搭配**：标题 + 正文 + 等宽有区分
-- [ ] **布局有意义**：不是为了填满而填满
-
----
-
-## 测试执行方法
-
-### 手动测试
-1. 在 opencode 中加载 canvas-magic 技能
-2. 输入 prompt（一句话描述）
-3. 检查生成的 HTML 是否符合 expected
-4. 对照 tests 逐项验证
-5. 在浏览器中打开预览效果
-
-### 验证要点
-- **视觉质量**：好看吗？像专业设计吗？
-- **信息完整**：该有的元素都有吗？
-- **交互合理**：hover、点击、滚动有反馈吗？
-- **响应式**：手机和电脑都能看吗？
-- **性能**：加载快吗？动画流畅吗？
 
 ---
 
 **最后更新**：2026-04-28
-**测试用例数**：20
-**覆盖范围**：网页、PPT、App 原型、动效、风格对比、边界情况
+**测试用例数**：5
