@@ -204,6 +204,27 @@ mouse.y += (mouseTarget.y - mouse.y) * 0.05;
 
 ---
 
+## 仓库信息（重要）
+
+### 主仓库（项目）
+- **名称**：canvas-magic
+- **地址**：https://github.com/SunChJ/canvas-magic
+- **用途**：项目主仓库，包含所有版本和文档
+- **分支**：main（稳定）、develop（开发）
+
+### 技能仓库
+- **名称**：canvas-magic-skill
+- **地址**：https://github.com/SunChJ/canvas-magic-skill
+- **用途**：技能库，可被其他项目引用
+- **内容**：SKILL.md + references/
+
+### 关系说明
+- 主仓库是完整项目，包含技能仓库的内容
+- 技能仓库是独立发布的技能包
+- 两者通过 Git submodule 或手动同步关联
+
+---
+
 **最后更新**：2026-04-28
-**记忆条数**：45/50
+**记忆条数**：47/50
 **下次清理**：2026-05-05
