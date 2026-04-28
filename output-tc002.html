@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DataFlow - AI 数据分析平台 Pitch Deck</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;700&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    :root {
+      --bg: #050505;
+      --bg-2: #0a0a0f;
+      --surface: rgba(255,255,255,0.03);
+      --border: rgba(255,255,255,0.07);
+      --text: #EEEAF4;
+      --text-muted: rgba(238,234,244,0.5);
+      --accent: #4A6CF7;
+      --gold: #C9A84C;
+    }
+    
+    body {
+      font-family: 'Noto Sans SC', -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      overflow: hidden;
+      height: 100vh;
+    }
+    
+    .deck {
+      width: 100vw;
+      height: 100vh;
+      position: relative;
+    }
+    
+    .slide {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 80px 120px;
+      opacity: 0;
+      transform: translateX(100%);
+      transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    
+    .slide.active {
+      opacity: 1;
+      transform: translateX(0);
+    }
+    
+    .slide.prev {
+      opacity: 0;
+      transform: translateX(-100%);
+    }
+    
+    /* Slide 1: Cover */
+    .slide-1 {
+      background: linear-gradient(135deg, #050505 0%, #0a0a1a 100%);
+    }
+    
+    .slide-1 .logo {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 72px;
+      font-weight: 700;
+      letter-spacing: -0.04em;
+      margin-bottom: 16px;
+    }
+    
+    .slide-1 .logo span {
+      color: var(--accent);
+    }
+    
+    .slide-1 .tagline {
+      font-size: 28px;
+      color: var(--text-muted);
+      margin-bottom: 48px;
+      font-weight: 300;
+    }
+    
+    .slide-1 .meta {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 14px;
+      color: var(--text-muted);
+      letter-spacing: 0.1em;
+    }
+    
+    /* Section Divider */
+    .slide-divider {
+      background: var(--bg);
+    }
+    
+    .slide-divider .section-number {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 120px;
+      font-weight: 700;
+      color: rgba(74,108,247,0.15);
+      margin-bottom: 24px;
+    }
+    
+    .slide-divider .section-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 48px;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+    }
+    
+    .slide-divider .section-subtitle {
+      font-size: 18px;
+      color: var(--text-muted);
+      margin-top: 16px;
+    }
+    
+    /* Content Slides */
+    .slide-content {
+      background: var(--bg);
+      align-items: flex-start;
+    }
+    
+    .slide-content h2 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 42px;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      margin-bottom: 40px;
+      width: 100%;
+    }
+    
+    .slide-content h2 span {
+      color: var(--accent);
+    }
+    
+    .content-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 40px;
+      width: 100%;
+    }
+    
+    .content-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 32px;
+    }
+    
+    .content-card h3 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 16px;
+      color: var(--accent);
+    }
+    
+    .content-card p {
+      font-size: 16px;
+      line-height: 1.8;
+      color: var(--text-muted);
+    }
+    
+    .content-card ul {
+      list-style: none;
+      font-size: 15px;
+      line-height: 2;
+      color: var(--text-muted);
+    }
+    
+    .content-card li::before {
+      content: '→ ';
+      color: var(--accent);
+    }
+    
+    /* Data Slide */
+    .slide-data {
+      background: var(--bg);
+    }
+    
+    .data-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 32px;
+      width: 100%;
+      margin-top: 40px;
+    }
+    
+    .data-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 32px;
+      text-align: center;
+    }
+    
+    .data-card .number {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 56px;
+      font-weight: 700;
+      color: var(--accent);
+      margin-bottom: 8px;
+    }
+    
+    .data-card .label {
+      font-size: 14px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+    
+    /* Quote Slide */
+    .slide-quote {
+      background: var(--bg);
+    }
+    
+    .quote {
+      font-size: 32px;
+      font-weight: 300;
+      line-height: 1.6;
+      text-align: center;
+      max-width: 800px;
+      font-style: italic;
+    }
+    
+    .quote::before {
+      content: '"';
+      color: var(--accent);
+      font-size: 64px;
+      line-height: 0;
+      vertical-align: -0.3em;
+      margin-right: 8px;
+    }
+    
+    .quote::after {
+      content: '"';
+      color: var(--accent);
+      font-size: 64px;
+      line-height: 0;
+      vertical-align: -0.3em;
+      margin-left: 8px;
+    }
+    
+    .quote-author {
+      margin-top: 32px;
+      font-size: 16px;
+      color: var(--text-muted);
+    }
+    
+    /* Team Slide */
+    .team-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 32px;
+      width: 100%;
+      margin-top: 40px;
+    }
+    
+    .team-card {
+      text-align: center;
+    }
+    
+    .team-avatar {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent), var(--gold));
+      margin: 0 auto 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 28px;
+      font-weight: 700;
+      color: #fff;
+    }
+    
+    .team-name {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+    
+    .team-role {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+    
+    /* Navigation */
+    .nav {
+      position: fixed;
+      bottom: 40px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      z-index: 100;
+    }
+    
+    .nav-btn {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-size: 20px;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .nav-btn:hover {
+      background: var(--accent);
+      border-color: var(--accent);
+    }
+    
+    .nav-btn:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+    }
+    
+    .page-indicator {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 14px;
+      color: var(--text-muted);
+    }
+    
+    .progress {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 3px;
+      background: var(--accent);
+      transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+      z-index: 100;
+    }
+    
+    /* Label */
+    .slide-label {
+      position: absolute;
+      top: 32px;
+      left: 40px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: var(--text-muted);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+  </style>
+</head>
+<body>
+  <div class="progress" id="progress"></div>
+  
+  <div class="deck" id="deck">
+    <!-- Slide 1: Cover -->
+    <div class="slide slide-1 active" data-slide="1">
+      <span class="slide-label">// 01 — Cover</span>
+      <div class="logo">Data<span>Flow</span></div>
+      <div class="tagline">让数据讲故事</div>
+      <div class="meta">SERIES A PITCH DECK · 2026</div>
+    </div>
+    
+    <!-- Slide 2: Problem -->
+    <div class="slide slide-content" data-slide="2">
+      <span class="slide-label">// 02 — Problem</span>
+      <h2>企业面临的<span>数据困境</span></h2>
+      <div class="content-grid">
+        <div class="content-card">
+          <h3>数据孤岛</h3>
+          <p>企业平均使用 12+ 个 SaaS 工具，数据分散在各个平台，无法形成统一视图。</p>
+        </div>
+        <div class="content-card">
+          <h3>分析门槛高</h3>
+          <p>80% 的业务问题需要数据支持，但只有 15% 的员工具备数据分析能力。</p>
+        </div>
+        <div class="content-card">
+          <h3>洞察滞后</h3>
+          <p>传统 BI 工具生成报表需要 3-5 天，错过最佳决策窗口。</p>
+        </div>
+        <div class="content-card">
+          <h3>成本高昂</h3>
+          <p>雇佣一名数据分析师年薪 30-50 万，中小企业难以承担。</p>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Slide 3: Solution -->
+    <div class="slide slide-content" data-slide="3">
+      <span class="slide-label">// 03 — Solution</span>
+      <h2>DataFlow 的<span>解决方案</span></h2>
+      <div class="content-grid">
+        <div class="content-card">
+          <h3>一键连接</h3>
+          <p>支持 100+ 数据源接入，包括数据库、API、Excel、Google Sheets 等，5 分钟完成配置。</p>
+        </div>
+        <div class="content-card">
+          <h3>自然语言查询</h3>
+          <p>用中文提问，AI 自动生成 SQL 并返回可视化结果。"上个月北京地区销售额是多少？"</p>
+        </div>
+        <div class="content-card">
+          <h3>实时洞察</h3>
+          <p>数据秒级更新，异常自动预警，关键指标一目了然。</p>
+        </div>
+        <div class="content-card">
+          <h3>零代码搭建</h3>
+          <p>拖拽式仪表盘 builder，业务人员也能创建专业级数据看板。</p>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Slide 4: Product -->
+    <div class="slide slide-content" data-slide="4">
+      <span class="slide-label">// 04 — Product</span>
+      <h2>产品<span>核心功能</span></h2>
+      <div class="content-grid">
+        <div class="content-card">
+          <h3>📊 智能仪表盘</h3>
+          <ul>
+            <li>拖拽式组件库</li>
+            <li>20+ 图表类型</li>
+            <li>实时数据刷新</li>
+            <li>移动端自适应</li>
+          </ul>
+        </div>
+        <div class="content-card">
+          <h3>🤖 AI 分析助手</h3>
+          <ul>
+            <li>自然语言查询</li>
+            <li>自动异常检测</li>
+            <li>趋势预测</li>
+            <li>智能归因分析</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Slide 5: Market -->
+    <div class="slide slide-data" data-slide="5">
+      <span class="slide-label">// 05 — Market</span>
+      <h2 style="font-family: 'Space Grotesk', sans-serif; font-size: 42px; font-weight: 700; letter-spacing: -0.03em;">市场规模</h2>
+      <div class="data-grid">
+        <div class="data-card">
+          <div class="number">$68B</div>
+          <div class="label">全球 BI 市场</div>
+        </div>
+        <div class="data-card">
+          <div class="number">23%</div>
+          <div class="label">年复合增长率</div>
+        </div>
+        <div class="data-card">
+          <div class="number">$12B</div>
+          <div class="label">中国市场规模</div>
+        </div>
+      </div>
+      <div class="content-grid" style="margin-top: 40px;">
+        <div class="content-card">
+          <h3>目标客户</h3>
+          <ul>
+            <li>中小企业（100-1000 人）</li>
+            <li>互联网/SaaS 公司</li>
+            <li>电商/零售企业</li>
+            <li>金融/保险机构</li>
+          </ul>
+        </div>
+        <div class="content-card">
+          <h3>竞争优势</h3>
+          <ul>
+            <li>中文语义理解最佳</li>
+            <li>部署成本低于竞品 60%</li>
+            <li>5 分钟接入 vs 竞品 2 周</li>
+            <li>本地化服务团队</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Slide 6: Business Model -->
+    <div class="slide slide-content" data-slide="6">
+      <span class="slide-label">// 06 — Business Model</span>
+      <h2>商业模式</h2>
+      <div class="content-grid">
+        <div class="content-card">
+          <h3>SaaS 订阅</h3>
+          <ul>
+            <li>基础版：¥999/月（10 用户）</li>
+            <li>专业版：¥2,999/月（50 用户）</li>
+            <li>企业版：¥9,999/月（不限用户）</li>
+          </ul>
+        </div>
+        <div class="content-card">
+          <h3>增值服务</h3>
+          <ul>
+            <li>定制化开发</li>
+            <li>数据迁移服务</li>
+            <li>培训与咨询</li>
+            <li>专属客户成功经理</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Slide 7: Traction -->
+    <div class="slide slide-data" data-slide="7">
+      <span class="slide-label">// 07 — Traction</span>
+      <h2 style="font-family: 'Space Grotesk', sans-serif; font-size: 42px; font-weight: 700; letter-spacing: -0.03em;">业务进展</h2>
+      <div class="data-grid">
+        <div class="data-card">
+          <div class="number">500+</div>
+          <div class="label">付费客户</div>
+        </div>
+        <div class="data-card">
+          <div class="number">¥8M</div>
+          <div class="label">年度经常性收入</div>
+        </div>
+        <div class="data-card">
+          <div class="number">150%</div>
+          <div class="label">收入增长率</div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Slide 8: Team -->
+    <div class="slide slide-content" data-slide="8">
+      <span class="slide-label">// 08 — Team</span>
+      <h2>核心团队</h2>
+      <div class="team-grid">
+        <div class="team-card">
+          <div class="team-avatar">张</div>
+          <div class="team-name">张明</div>
+          <div class="team-role">CEO · 前阿里数据平台负责人</div>
+        </div>
+        <div class="team-card">
+          <div class="team-avatar">李</div>
+          <div class="team-name">李华</div>
+          <div class="team-role">CTO · 前字节跳动技术专家</div>
+        </div>
+        <div class="team-card">
+          <div class="team-avatar">王</div>
+          <div class="team-name">王芳</div>
+          <div class="team-role">CPO · 前 Tableau 产品经理</div>
+        </div>
+        <div class="team-card">
+          <div class="team-avatar">陈</div>
+          <div class="team-name">陈强</div>
+          <div class="team-role">VP Sales · 前 Salesforce 销售总监</div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Slide 9: Ask -->
+    <div class="slide slide-data" data-slide="9">
+      <span class="slide-label">// 09 — Ask</span>
+      <h2 style="font-family: 'Space Grotesk', sans-serif; font-size: 42px; font-weight: 700; letter-spacing: -0.03em;">融资需求</h2>
+      <div class="data-grid">
+        <div class="data-card">
+          <div class="number">$10M</div>
+          <div class="label">融资金额</div>
+        </div>
+        <div class="data-card">
+          <div class="number">18个月</div>
+          <div class="label">资金使用周期</div>
+        </div>
+        <div class="data-card">
+          <div class="number">3x</div>
+          <div class="label">预期收入增长</div>
+        </div>
+      </div>
+      <div class="content-grid" style="margin-top: 40px;">
+        <div class="content-card">
+          <h3>资金用途</h3>
+          <ul>
+            <li>产品研发 40%</li>
+            <li>市场拓展 30%</li>
+            <li>团队扩张 20%</li>
+            <li>运营储备 10%</li>
+          </ul>
+        </div>
+        <div class="content-card">
+          <h3>里程碑</h3>
+          <ul>
+            <li>2026 Q4：客户数突破 1000</li>
+            <li>2027 Q2：ARR 达到 ¥30M</li>
+            <li>2027 Q4：启动 B 轮融资</li>
+            <li>2028：实现盈亏平衡</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Slide 10: Closing -->
+    <div class="slide slide-quote" data-slide="10">
+      <span class="slide-label">// 10 — Closing</span>
+      <div class="quote">让每一个企业都能用数据驱动决策</div>
+      <div class="quote-author">— DataFlow 团队</div>
+      <div style="margin-top: 60px; text-align: center;">
+        <div style="font-size: 18px; color: var(--text-muted); margin-bottom: 16px;">联系我们</div>
+        <div style="font-family: 'JetBrains Mono', monospace; font-size: 16px; color: var(--accent);">hello@dataflow.ai</div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="nav">
+    <button class="nav-btn" id="prev" disabled>←</button>
+    <span class="page-indicator" id="pageIndicator">1 / 10</span>
+    <button class="nav-btn" id="next">→</button>
+  </div>
+  
+  <script>
+    const slides = document.querySelectorAll('.slide');
+    const prevBtn = document.getElementById('prev');
+    const nextBtn = document.getElementById('next');
+    const pageIndicator = document.getElementById('pageIndicator');
+    const progress = document.getElementById('progress');
+    let current = 0;
+    const total = slides.length;
+    
+    function updateSlide() {
+      slides.forEach((slide, i) => {
+        slide.classList.remove('active', 'prev');
+        if (i === current) {
+          slide.classList.add('active');
+        } else if (i < current) {
+          slide.classList.add('prev');
+        }
+      });
+      
+      prevBtn.disabled = current === 0;
+      nextBtn.disabled = current === total - 1;
+      pageIndicator.textContent = `${current + 1} / ${total}`;
+      progress.style.width = `${((current + 1) / total) * 100}%`;
+    }
+    
+    prevBtn.addEventListener('click', () => {
+      if (current > 0) {
+        current--;
+        updateSlide();
+      }
+    });
+    
+    nextBtn.addEventListener('click', () => {
+      if (current < total - 1) {
+        current++;
+        updateSlide();
+      }
+    });
+    
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowLeft' && current > 0) {
+        current--;
+        updateSlide();
+      }
+      if (e.key === 'ArrowRight' && current < total - 1) {
+        current++;
+        updateSlide();
+      }
+    });
+    
+    updateSlide();
+  </script>
+</body>
+</html>

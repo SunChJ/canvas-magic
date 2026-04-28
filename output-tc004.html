@@ -1,0 +1,1013 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Habit Tracker App 原型</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;700&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    body {
+      font-family: 'Noto Sans SC', -apple-system, sans-serif;
+      background: #f0f0f0;
+      min-height: 100vh;
+      padding: 40px 20px;
+    }
+    
+    .header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+    
+    .header h1 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 36px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 8px;
+    }
+    
+    .header p {
+      font-size: 16px;
+      color: #666;
+    }
+    
+    .screens {
+      display: flex;
+      gap: 24px;
+      overflow-x: auto;
+      padding-bottom: 20px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    
+    .screen {
+      flex-shrink: 0;
+      width: 300px;
+      background: #fff;
+      border-radius: 40px;
+      overflow: hidden;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+      border: 8px solid #1a1a1a;
+    }
+    
+    .screen-header {
+      padding: 12px 16px;
+      background: #1a1a1a;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .screen-time {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 14px;
+      font-weight: 600;
+      color: #fff;
+    }
+    
+    .screen-notch {
+      width: 120px;
+      height: 28px;
+      background: #000;
+      border-radius: 0 0 16px 16px;
+    }
+    
+    .screen-status {
+      display: flex;
+      gap: 6px;
+    }
+    
+    .screen-status span {
+      font-size: 12px;
+      color: #fff;
+    }
+    
+    .screen-content {
+      height: 580px;
+      overflow-y: auto;
+    }
+    
+    .screen-label {
+      text-align: center;
+      margin-top: 12px;
+      font-size: 14px;
+      font-weight: 600;
+      color: #333;
+    }
+    
+    .screen-sublabel {
+      text-align: center;
+      font-size: 12px;
+      color: #888;
+      margin-top: 4px;
+    }
+    
+    /* Screen 1: Home */
+    .home {
+      background: #f8f9fa;
+    }
+    
+    .home-header {
+      padding: 20px;
+      background: linear-gradient(135deg, #4A6CF7 0%, #7B61FF 100%);
+      color: #fff;
+    }
+    
+    .home-greeting {
+      font-size: 14px;
+      opacity: 0.8;
+      margin-bottom: 4px;
+    }
+    
+    .home-name {
+      font-size: 24px;
+      font-weight: 700;
+    }
+    
+    .home-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      padding: 16px 20px;
+      margin-top: -30px;
+    }
+    
+    .stat-card {
+      background: #fff;
+      border-radius: 12px;
+      padding: 16px;
+      text-align: center;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+    
+    .stat-value {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 24px;
+      font-weight: 700;
+      color: #4A6CF7;
+    }
+    
+    .stat-label {
+      font-size: 11px;
+      color: #888;
+      margin-top: 4px;
+    }
+    
+    .section-title {
+      font-size: 16px;
+      font-weight: 600;
+      padding: 20px 20px 12px;
+    }
+    
+    .habit-list {
+      padding: 0 20px;
+    }
+    
+    .habit-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px;
+      background: #fff;
+      border-radius: 12px;
+      margin-bottom: 10px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+    }
+    
+    .habit-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+    }
+    
+    .habit-info {
+      flex: 1;
+    }
+    
+    .habit-name {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+    
+    .habit-streak {
+      font-size: 12px;
+      color: #888;
+    }
+    
+    .habit-check {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      border: 2px solid #e0e0e0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .habit-check.done {
+      background: #4A6CF7;
+      border-color: #4A6CF7;
+      color: #fff;
+    }
+    
+    /* Screen 2: New Habit */
+    .new-habit {
+      background: #f8f9fa;
+    }
+    
+    .new-habit-header {
+      padding: 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    
+    .back-btn {
+      font-size: 20px;
+      color: #4A6CF7;
+    }
+    
+    .new-habit-title {
+      font-size: 18px;
+      font-weight: 600;
+    }
+    
+    .form-group {
+      padding: 0 20px;
+      margin-bottom: 20px;
+    }
+    
+    .form-label {
+      font-size: 13px;
+      font-weight: 600;
+      color: #666;
+      margin-bottom: 8px;
+    }
+    
+    .form-input {
+      width: 100%;
+      padding: 14px;
+      background: #fff;
+      border: 1px solid #e0e0e0;
+      border-radius: 10px;
+      font-size: 15px;
+    }
+    
+    .emoji-picker {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    
+    .emoji-option {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      background: #fff;
+      border: 2px solid #e0e0e0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      cursor: pointer;
+    }
+    
+    .emoji-option.selected {
+      border-color: #4A6CF7;
+      background: #f0f4ff;
+    }
+    
+    .color-picker {
+      display: flex;
+      gap: 10px;
+    }
+    
+    .color-option {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      cursor: pointer;
+      border: 3px solid transparent;
+    }
+    
+    .color-option.selected {
+      border-color: #000;
+    }
+    
+    .submit-btn {
+      margin: 20px;
+      padding: 16px;
+      background: #4A6CF7;
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 600;
+      width: calc(100% - 40px);
+      cursor: pointer;
+    }
+    
+    /* Screen 3: Detail */
+    .detail {
+      background: #f8f9fa;
+    }
+    
+    .detail-header {
+      padding: 20px;
+      background: linear-gradient(135deg, #FF6B9D 0%, #FF8E53 100%);
+      color: #fff;
+      text-align: center;
+    }
+    
+    .detail-icon {
+      font-size: 48px;
+      margin-bottom: 12px;
+    }
+    
+    .detail-name {
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+    
+    .detail-streak {
+      font-size: 14px;
+      opacity: 0.8;
+    }
+    
+    .detail-stats {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      padding: 16px 20px;
+      margin-top: -20px;
+    }
+    
+    .detail-stat {
+      background: #fff;
+      border-radius: 12px;
+      padding: 16px;
+      text-align: center;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+    
+    .calendar {
+      padding: 20px;
+    }
+    
+    .calendar-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+    
+    .calendar-title {
+      font-size: 16px;
+      font-weight: 600;
+    }
+    
+    .calendar-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 8px;
+    }
+    
+    .calendar-day {
+      aspect-ratio: 1;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 500;
+    }
+    
+    .calendar-day.completed {
+      background: #FF6B9D;
+      color: #fff;
+    }
+    
+    .calendar-day.today {
+      border: 2px solid #FF6B9D;
+    }
+    
+    .calendar-day.empty {
+      background: transparent;
+    }
+    
+    /* Screen 4: Stats */
+    .stats {
+      background: #f8f9fa;
+    }
+    
+    .stats-header {
+      padding: 20px;
+      text-align: center;
+    }
+    
+    .stats-title {
+      font-size: 18px;
+      font-weight: 600;
+    }
+    
+    .chart-card {
+      margin: 0 20px 16px;
+      background: #fff;
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+    
+    .chart-title {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 16px;
+    }
+    
+    .bar-chart {
+      display: flex;
+      align-items: flex-end;
+      gap: 12px;
+      height: 120px;
+    }
+    
+    .bar {
+      flex: 1;
+      background: linear-gradient(to top, #4A6CF7, #7B61FF);
+      border-radius: 6px 6px 0 0;
+      position: relative;
+    }
+    
+    .bar-label {
+      position: absolute;
+      bottom: -20px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 11px;
+      color: #888;
+    }
+    
+    .completion-rate {
+      text-align: center;
+      padding: 20px;
+    }
+    
+    .rate-circle {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      border: 8px solid #e0e0e0;
+      border-top-color: #4A6CF7;
+      border-right-color: #4A6CF7;
+      border-bottom-color: #4A6CF7;
+      margin: 0 auto 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .rate-value {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 32px;
+      font-weight: 700;
+      color: #4A6CF7;
+    }
+    
+    .rate-label {
+      font-size: 14px;
+      color: #888;
+    }
+    
+    /* Screen 5: Settings */
+    .settings {
+      background: #f8f9fa;
+    }
+    
+    .settings-header {
+      padding: 20px;
+      text-align: center;
+    }
+    
+    .settings-title {
+      font-size: 18px;
+      font-weight: 600;
+    }
+    
+    .profile-card {
+      margin: 0 20px 20px;
+      background: #fff;
+      border-radius: 16px;
+      padding: 20px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+    
+    .profile-avatar {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #4A6CF7, #7B61FF);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      color: #fff;
+      font-weight: 700;
+    }
+    
+    .profile-name {
+      font-size: 18px;
+      font-weight: 600;
+    }
+    
+    .profile-email {
+      font-size: 13px;
+      color: #888;
+    }
+    
+    .settings-group {
+      margin: 0 20px 20px;
+      background: #fff;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+    
+    .settings-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 20px;
+      border-bottom: 1px solid #f0f0f0;
+    }
+    
+    .settings-item:last-child {
+      border-bottom: none;
+    }
+    
+    .settings-item-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    
+    .settings-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      background: #f0f4ff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+    }
+    
+    .settings-item-label {
+      font-size: 15px;
+    }
+    
+    .settings-item-arrow {
+      color: #ccc;
+    }
+    
+    .toggle {
+      width: 48px;
+      height: 28px;
+      border-radius: 14px;
+      background: #e0e0e0;
+      position: relative;
+      cursor: pointer;
+    }
+    
+    .toggle.active {
+      background: #4A6CF7;
+    }
+    
+    .toggle::after {
+      content: '';
+      position: absolute;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: #fff;
+      top: 3px;
+      left: 3px;
+      transition: transform 0.2s;
+    }
+    
+    .toggle.active::after {
+      transform: translateX(20px);
+    }
+    
+    /* Bottom Nav */
+    .bottom-nav {
+      display: flex;
+      justify-content: space-around;
+      padding: 12px 0;
+      background: #fff;
+      border-top: 1px solid #f0f0f0;
+      margin-top: auto;
+    }
+    
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      font-size: 11px;
+      color: #888;
+    }
+    
+    .nav-item.active {
+      color: #4A6CF7;
+    }
+    
+    .nav-icon {
+      font-size: 20px;
+    }
+    
+    @media (max-width: 1200px) {
+      .screens {
+        justify-content: flex-start;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>Habit Tracker App 原型</h1>
+    <p>5 个核心屏幕 · 高密度信息 · iOS 风格</p>
+  </div>
+  
+  <div class="screens">
+    <!-- Screen 1: Home -->
+    <div>
+      <div class="screen">
+        <div class="screen-header">
+          <span class="screen-time">9:41</span>
+          <div class="screen-notch"></div>
+          <div class="screen-status">
+            <span>📶</span>
+            <span>🔋</span>
+          </div>
+        </div>
+        <div class="screen-content home">
+          <div class="home-header">
+            <div class="home-greeting">早上好</div>
+            <div class="home-name">小明 👋</div>
+          </div>
+          <div class="home-stats">
+            <div class="stat-card">
+              <div class="stat-value">7</div>
+              <div class="stat-label">连续天数</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-value">85%</div>
+              <div class="stat-label">完成率</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-value">4</div>
+              <div class="stat-label">今日任务</div>
+            </div>
+          </div>
+          <div class="section-title">今日习惯</div>
+          <div class="habit-list">
+            <div class="habit-item">
+              <div class="habit-icon" style="background: #fff3e0;">🌅</div>
+              <div class="habit-info">
+                <div class="habit-name">早起</div>
+                <div class="habit-streak">连续 12 天</div>
+              </div>
+              <div class="habit-check done">✓</div>
+            </div>
+            <div class="habit-item">
+              <div class="habit-icon" style="background: #e8f5e9;">🏃</div>
+              <div class="habit-info">
+                <div class="habit-name">跑步 30 分钟</div>
+                <div class="habit-streak">连续 5 天</div>
+              </div>
+              <div class="habit-check"></div>
+            </div>
+            <div class="habit-item">
+              <div class="habit-icon" style="background: #e3f2fd;">📚</div>
+              <div class="habit-info">
+                <div class="habit-name">阅读 30 页</div>
+                <div class="habit-streak">连续 8 天</div>
+              </div>
+              <div class="habit-check"></div>
+            </div>
+            <div class="habit-item">
+              <div class="habit-icon" style="background: #fce4ec;">🧘</div>
+              <div class="habit-info">
+                <div class="habit-name">冥想 10 分钟</div>
+                <div class="habit-streak">连续 3 天</div>
+              </div>
+              <div class="habit-check"></div>
+            </div>
+          </div>
+          <div class="bottom-nav">
+            <div class="nav-item active">
+              <span class="nav-icon">🏠</span>
+              <span>首页</span>
+            </div>
+            <div class="nav-item">
+              <span class="nav-icon">➕</span>
+              <span>新建</span>
+            </div>
+            <div class="nav-item">
+              <span class="nav-icon">📊</span>
+              <span>统计</span>
+            </div>
+            <div class="nav-item">
+              <span class="nav-icon">⚙️</span>
+              <span>设置</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="screen-label">首页</div>
+      <div class="screen-sublabel">习惯列表 + 今日统计</div>
+    </div>
+    
+    <!-- Screen 2: New Habit -->
+    <div>
+      <div class="screen">
+        <div class="screen-header">
+          <span class="screen-time">9:41</span>
+          <div class="screen-notch"></div>
+          <div class="screen-status">
+            <span>📶</span>
+            <span>🔋</span>
+          </div>
+        </div>
+        <div class="screen-content new-habit">
+          <div class="new-habit-header">
+            <span class="back-btn">←</span>
+            <span class="new-habit-title">新建习惯</span>
+          </div>
+          <div class="form-group">
+            <div class="form-label">习惯名称</div>
+            <input type="text" class="form-input" placeholder="例如：每天跑步 30 分钟">
+          </div>
+          <div class="form-group">
+            <div class="form-label">选择图标</div>
+            <div class="emoji-picker">
+              <div class="emoji-option selected">🏃</div>
+              <div class="emoji-option">📚</div>
+              <div class="emoji-option">🧘</div>
+              <div class="emoji-option">💧</div>
+              <div class="emoji-option">🌅</div>
+              <div class="emoji-option">💪</div>
+              <div class="emoji-option">🎯</div>
+              <div class="emoji-option">✍️</div>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="form-label">选择颜色</div>
+            <div class="color-picker">
+              <div class="color-option selected" style="background: #4A6CF7;"></div>
+              <div class="color-option" style="background: #FF6B9D;"></div>
+              <div class="color-option" style="background: #00C9A7;"></div>
+              <div class="color-option" style="background: #FFD93D;"></div>
+              <div class="color-option" style="background: #845EC2;"></div>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="form-label">频率</div>
+            <div class="emoji-picker">
+              <div class="emoji-option selected" style="width: auto; padding: 0 16px; font-size: 14px;">每天</div>
+              <div class="emoji-option" style="width: auto; padding: 0 16px; font-size: 14px;">工作日</div>
+              <div class="emoji-option" style="width: auto; padding: 0 16px; font-size: 14px;">周末</div>
+            </div>
+          </div>
+          <button class="submit-btn">创建习惯</button>
+        </div>
+      </div>
+      <div class="screen-label">新建习惯</div>
+      <div class="screen-sublabel">表单 + 图标/颜色选择</div>
+    </div>
+    
+    <!-- Screen 3: Detail -->
+    <div>
+      <div class="screen">
+        <div class="screen-header">
+          <span class="screen-time">9:41</span>
+          <div class="screen-notch"></div>
+          <div class="screen-status">
+            <span>📶</span>
+            <span>🔋</span>
+          </div>
+        </div>
+        <div class="screen-content detail">
+          <div class="detail-header">
+            <div class="detail-icon">🏃</div>
+            <div class="detail-name">跑步 30 分钟</div>
+            <div class="detail-streak">连续 5 天</div>
+          </div>
+          <div class="detail-stats">
+            <div class="detail-stat">
+              <div class="stat-value">5</div>
+              <div class="stat-label">连续天数</div>
+            </div>
+            <div class="detail-stat">
+              <div class="stat-value">85%</div>
+              <div class="stat-label">完成率</div>
+            </div>
+          </div>
+          <div class="calendar">
+            <div class="calendar-header">
+              <span class="calendar-title">2026年4月</span>
+              <span style="color: #4A6CF7;">→</span>
+            </div>
+            <div class="calendar-grid">
+              <div class="calendar-day empty"></div>
+              <div class="calendar-day empty"></div>
+              <div class="calendar-day completed">1</div>
+              <div class="calendar-day completed">2</div>
+              <div class="calendar-day completed">3</div>
+              <div class="calendar-day today">4</div>
+              <div class="calendar-day">5</div>
+              <div class="calendar-day">6</div>
+              <div class="calendar-day">7</div>
+              <div class="calendar-day">8</div>
+              <div class="calendar-day">9</div>
+              <div class="calendar-day">10</div>
+              <div class="calendar-day">11</div>
+              <div class="calendar-day">12</div>
+              <div class="calendar-day">13</div>
+              <div class="calendar-day">14</div>
+              <div class="calendar-day">15</div>
+              <div class="calendar-day">16</div>
+              <div class="calendar-day">17</div>
+              <div class="calendar-day">18</div>
+              <div class="calendar-day">19</div>
+              <div class="calendar-day">20</div>
+              <div class="calendar-day">21</div>
+              <div class="calendar-day">22</div>
+              <div class="calendar-day">23</div>
+              <div class="calendar-day">24</div>
+              <div class="calendar-day">25</div>
+              <div class="calendar-day">26</div>
+              <div class="calendar-day">27</div>
+              <div class="calendar-day">28</div>
+              <div class="calendar-day">29</div>
+              <div class="calendar-day">30</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="screen-label">习惯详情</div>
+      <div class="screen-sublabel">统计 + 日历视图</div>
+    </div>
+    
+    <!-- Screen 4: Stats -->
+    <div>
+      <div class="screen">
+        <div class="screen-header">
+          <span class="screen-time">9:41</span>
+          <div class="screen-notch"></div>
+          <div class="screen-status">
+            <span>📶</span>
+            <span>🔋</span>
+          </div>
+        </div>
+        <div class="screen-content stats">
+          <div class="stats-header">
+            <div class="stats-title">统计概览</div>
+          </div>
+          <div class="chart-card">
+            <div class="chart-title">本周完成情况</div>
+            <div class="bar-chart">
+              <div class="bar" style="height: 80%;">
+                <span class="bar-label">一</span>
+              </div>
+              <div class="bar" style="height: 60%;">
+                <span class="bar-label">二</span>
+              </div>
+              <div class="bar" style="height: 100%;">
+                <span class="bar-label">三</span>
+              </div>
+              <div class="bar" style="height: 40%;">
+                <span class="bar-label">四</span>
+              </div>
+              <div class="bar" style="height: 90%;">
+                <span class="bar-label">五</span>
+              </div>
+              <div class="bar" style="height: 70%;">
+                <span class="bar-label">六</span>
+              </div>
+              <div class="bar" style="height: 50%;">
+                <span class="bar-label">日</span>
+              </div>
+            </div>
+          </div>
+          <div class="completion-rate">
+            <div class="rate-circle">
+              <div class="rate-value">85%</div>
+            </div>
+            <div class="rate-label">本月完成率</div>
+          </div>
+          <div class="chart-card">
+            <div class="chart-title">习惯排行</div>
+            <div class="habit-item">
+              <div class="habit-icon" style="background: #fff3e0;">🌅</div>
+              <div class="habit-info">
+                <div class="habit-name">早起</div>
+                <div class="habit-streak">连续 12 天</div>
+              </div>
+              <div style="color: #4A6CF7; font-weight: 600;">100%</div>
+            </div>
+            <div class="habit-item">
+              <div class="habit-icon" style="background: #e8f5e9;">🏃</div>
+              <div class="habit-info">
+                <div class="habit-name">跑步</div>
+                <div class="habit-streak">连续 5 天</div>
+              </div>
+              <div style="color: #4A6CF7; font-weight: 600;">85%</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="screen-label">统计</div>
+      <div class="screen-sublabel">图表 + 完成率</div>
+    </div>
+    
+    <!-- Screen 5: Settings -->
+    <div>
+      <div class="screen">
+        <div class="screen-header">
+          <span class="screen-time">9:41</span>
+          <div class="screen-notch"></div>
+          <div class="screen-status">
+            <span>📶</span>
+            <span>🔋</span>
+          </div>
+        </div>
+        <div class="screen-content settings">
+          <div class="settings-header">
+            <div class="settings-title">设置</div>
+          </div>
+          <div class="profile-card">
+            <div class="profile-avatar">明</div>
+            <div>
+              <div class="profile-name">小明</div>
+              <div class="profile-email">xiaoming@email.com</div>
+            </div>
+          </div>
+          <div class="settings-group">
+            <div class="settings-item">
+              <div class="settings-item-left">
+                <div class="settings-icon">🔔</div>
+                <span class="settings-item-label">提醒通知</span>
+              </div>
+              <div class="toggle active"></div>
+            </div>
+            <div class="settings-item">
+              <div class="settings-item-left">
+                <div class="settings-icon">🌙</div>
+                <span class="settings-item-label">深色模式</span>
+              </div>
+              <div class="toggle"></div>
+            </div>
+            <div class="settings-item">
+              <div class="settings-item-left">
+                <div class="settings-icon">📊</div>
+                <span class="settings-item-label">数据导出</span>
+              </div>
+              <span class="settings-item-arrow">→</span>
+            </div>
+          </div>
+          <div class="settings-group">
+            <div class="settings-item">
+              <div class="settings-item-left">
+                <div class="settings-icon">❓</div>
+                <span class="settings-item-label">帮助与反馈</span>
+              </div>
+              <span class="settings-item-arrow">→</span>
+            </div>
+            <div class="settings-item">
+              <div class="settings-item-left">
+                <div class="settings-icon">ℹ️</div>
+                <span class="settings-item-label">关于</span>
+              </div>
+              <span class="settings-item-arrow">→</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="screen-label">设置</div>
+      <div class="screen-sublabel">个人资料 + 偏好设置</div>
+    </div>
+  </div>
+</body>
+</html>

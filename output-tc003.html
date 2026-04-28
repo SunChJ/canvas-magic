@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>神经网络工作原理 - 30秒动画</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;700&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    body {
+      font-family: 'Noto Sans SC', -apple-system, sans-serif;
+      background: #050505;
+      color: #fff;
+      overflow: hidden;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .container {
+      width: 100%;
+      height: 100%;
+      position: relative;
+    }
+    
+    canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+    
+    .overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      pointer-events: none;
+      z-index: 10;
+    }
+    
+    .phase {
+      position: absolute;
+      text-align: center;
+      opacity: 0;
+      transform: translateY(30px);
+      transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    
+    .phase.active {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    
+    .phase.exit {
+      opacity: 0;
+      transform: translateY(-30px);
+    }
+    
+    .phase-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 56px;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      margin-bottom: 16px;
+    }
+    
+    .phase-subtitle {
+      font-size: 24px;
+      color: rgba(255,255,255,0.6);
+      font-weight: 300;
+    }
+    
+    .phase-number {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 14px;
+      color: rgba(255,255,255,0.3);
+      letter-spacing: 0.2em;
+      margin-bottom: 16px;
+    }
+    
+    .controls {
+      position: fixed;
+      bottom: 40px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      z-index: 100;
+      pointer-events: auto;
+    }
+    
+    .btn {
+      padding: 12px 24px;
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 8px;
+      color: #fff;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    
+    .btn:hover {
+      background: rgba(255,255,255,0.2);
+    }
+    
+    .btn:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+    }
+    
+    .timeline {
+      width: 200px;
+      height: 4px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+    
+    .timeline-progress {
+      height: 100%;
+      background: #4A6CF7;
+      border-radius: 2px;
+      transition: width 0.3s linear;
+    }
+    
+    .time-display {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 14px;
+      color: rgba(255,255,255,0.5);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <canvas id="canvas"></canvas>
+    
+    <div class="overlay">
+      <!-- Phase 1: Input -->
+      <div class="phase active" id="phase1">
+        <div class="phase-number">PHASE 01</div>
+        <div class="phase-title">数据输入</div>
+        <div class="phase-subtitle">神经网络从外部世界接收信息</div>
+      </div>
+      
+      <!-- Phase 2: Processing -->
+      <div class="phase" id="phase2">
+        <div class="phase-number">PHASE 02</div>
+        <div class="phase-title">加权求和</div>
+        <div class="phase-subtitle">每个神经元计算输入的加权总和</div>
+      </div>
+      
+      <!-- Phase 3: Activation -->
+      <div class="phase" id="phase3">
+        <div class="phase-number">PHASE 03</div>
+        <div class="phase-title">激活函数</div>
+        <div class="phase-subtitle">决定神经元是否"激活"</div>
+      </div>
+      
+      <!-- Phase 4: Output -->
+      <div class="phase" id="phase4">
+        <div class="phase-number">PHASE 04</div>
+        <div class="phase-title">输出结果</div>
+        <div class="phase-subtitle">网络给出预测或分类</div>
+      </div>
+      
+      <!-- Phase 5: Learning -->
+      <div class="phase" id="phase5">
+        <div class="phase-number">PHASE 05</div>
+        <div class="phase-title">反向传播</div>
+        <div class="phase-subtitle">根据误差调整权重，不断学习</div>
+      </div>
+    </div>
+    
+    <div class="controls">
+      <button class="btn" id="playBtn">播放</button>
+      <div class="timeline">
+        <div class="timeline-progress" id="timelineProgress"></div>
+      </div>
+      <span class="time-display" id="timeDisplay">0:00 / 0:30</span>
+      <button class="btn" id="resetBtn">重置</button>
+    </div>
+  </div>
+  
+  <script>
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    let W, H;
+    
+    function resize() {
+      W = canvas.width = window.innerWidth;
+      H = canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resize);
+    resize();
+    
+    // Neural network visualization
+    const layers = [4, 6, 6, 3]; // neurons per layer
+    const neurons = [];
+    const connections = [];
+    
+    // Initialize neurons
+    function initNetwork() {
+      neurons.length = 0;
+      connections.length = 0;
+      
+      const layerSpacing = W / (layers.length + 1);
+      
+      layers.forEach((count, layerIndex) => {
+        const x = layerSpacing * (layerIndex + 1);
+        const neuronSpacing = H / (count + 1);
+        
+        for (let i = 0; i < count; i++) {
+          const y = neuronSpacing * (i + 1);
+          neurons.push({
+            x, y,
+            layer: layerIndex,
+            index: i,
+            activation: 0,
+            targetActivation: 0,
+            radius: 20
+          });
+        }
+      });
+      
+      // Create connections
+      let prevLayerStart = 0;
+      for (let l = 0; l < layers.length - 1; l++) {
+        const currentLayerStart = prevLayerStart + layers[l];
+        const nextLayerStart = currentLayerStart + layers[l + 1];
+        
+        for (let i = prevLayerStart; i < currentLayerStart; i++) {
+          for (let j = currentLayerStart; j < nextLayerStart; j++) {
+            connections.push({
+              from: i,
+              to: j,
+              weight: Math.random() * 0.5 + 0.5,
+              signal: 0,
+              signalProgress: 0
+            });
+          }
+        }
+        
+        prevLayerStart = currentLayerStart;
+      }
+    }
+    
+    initNetwork();
+    
+    // Animation state
+    let currentPhase = 0;
+    let phaseTimer = 0;
+    const phaseDuration = 6000; // 6 seconds per phase
+    let isPlaying = false;
+    let startTime = null;
+    let animationId = null;
+    
+    const phases = document.querySelectorAll('.phase');
+    const playBtn = document.getElementById('playBtn');
+    const resetBtn = document.getElementById('resetBtn');
+    const timelineProgress = document.getElementById('timelineProgress');
+    const timeDisplay = document.getElementById('timeDisplay');
+    
+    function updatePhase() {
+      phases.forEach((phase, i) => {
+        phase.classList.remove('active', 'exit');
+        if (i === currentPhase) {
+          phase.classList.add('active');
+        } else if (i < currentPhase) {
+          phase.classList.add('exit');
+        }
+      });
+    }
+    
+    function animate(timestamp) {
+      if (!startTime) startTime = timestamp;
+      const elapsed = timestamp - startTime;
+      
+      // Update timeline
+      const totalDuration = phaseDuration * 5;
+      const progress = Math.min(elapsed / totalDuration, 1);
+      timelineProgress.style.width = `${progress * 100}%`;
+      
+      const seconds = Math.floor(elapsed / 1000);
+      const totalSeconds = Math.floor(totalDuration / 1000);
+      timeDisplay.textContent = `0:${seconds.toString().padStart(2, '0')} / 0:${totalSeconds.toString().padStart(2, '0')}`;
+      
+      // Update phase
+      const newPhase = Math.floor(elapsed / phaseDuration);
+      if (newPhase !== currentPhase && newPhase < 5) {
+        currentPhase = newPhase;
+        updatePhase();
+      }
+      
+      // Clear canvas
+      ctx.fillStyle = '#050505';
+      ctx.fillRect(0, 0, W, H);
+      
+      // Draw connections
+      connections.forEach(conn => {
+        const from = neurons[conn.from];
+        const to = neurons[conn.to];
+        
+        ctx.beginPath();
+        ctx.moveTo(from.x, from.y);
+        ctx.lineTo(to.x, to.y);
+        ctx.strokeStyle = `rgba(74, 108, 247, ${conn.weight * 0.3})`;
+        ctx.lineWidth = conn.weight * 2;
+        ctx.stroke();
+        
+        // Draw signal
+        if (conn.signal > 0) {
+          const x = from.x + (to.x - from.x) * conn.signalProgress;
+          const y = from.y + (to.y - from.y) * conn.signalProgress;
+          
+          ctx.beginPath();
+          ctx.arc(x, y, 4, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(74, 108, 247, ${conn.signal})`;
+          ctx.fill();
+        }
+      });
+      
+      // Draw neurons
+      neurons.forEach(neuron => {
+        // Activation glow
+        if (neuron.activation > 0) {
+          ctx.beginPath();
+          ctx.arc(neuron.x, neuron.y, neuron.radius + 10, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(74, 108, 247, ${neuron.activation * 0.3})`;
+          ctx.fill();
+        }
+        
+        // Neuron body
+        ctx.beginPath();
+        ctx.arc(neuron.x, neuron.y, neuron.radius, 0, Math.PI * 2);
+        ctx.fillStyle = neuron.activation > 0 ? 
+          `rgba(74, 108, 247, ${0.5 + neuron.activation * 0.5})` : 
+          'rgba(255, 255, 255, 0.1)';
+        ctx.fill();
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
+        ctx.lineWidth = 1;
+        ctx.stroke();
+        
+        // Layer labels
+        if (neuron.index === 0) {
+          const labels = ['输入层', '隐藏层', '隐藏层', '输出层'];
+          ctx.font = '14px "JetBrains Mono", monospace';
+          ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
+          ctx.textAlign = 'center';
+          ctx.fillText(labels[neuron.layer], neuron.x, H - 30);
+        }
+      });
+      
+      // Phase-specific animations
+      const phaseProgress = (elapsed % phaseDuration) / phaseDuration;
+      
+      if (currentPhase === 0) {
+        // Input phase - activate input neurons
+        neurons.forEach(neuron => {
+          if (neuron.layer === 0) {
+            neuron.targetActivation = Math.sin(phaseProgress * Math.PI * 2 + neuron.index) * 0.5 + 0.5;
+          }
+        });
+      } else if (currentPhase === 1) {
+        // Weighted sum - show signals flowing
+        connections.forEach(conn => {
+          if (neurons[conn.from].layer === 0) {
+            conn.signal = 1;
+            conn.signalProgress = phaseProgress;
+          }
+        });
+      } else if (currentPhase === 2) {
+        // Activation - activate hidden neurons
+        neurons.forEach(neuron => {
+          if (neuron.layer === 1 || neuron.layer === 2) {
+            neuron.targetActivation = Math.sin(phaseProgress * Math.PI + neuron.index * 0.5) * 0.5 + 0.5;
+          }
+        });
+      } else if (currentPhase === 3) {
+        // Output - activate output neurons
+        neurons.forEach(neuron => {
+          if (neuron.layer === 3) {
+            neuron.targetActivation = phaseProgress;
+          }
+        });
+      } else if (currentPhase === 4) {
+        // Learning - show weight adjustments
+        connections.forEach(conn => {
+          conn.weight = 0.5 + Math.sin(phaseProgress * Math.PI * 4 + conn.from * 0.1) * 0.3;
+        });
+      }
+      
+      // Smooth activation
+      neurons.forEach(neuron => {
+        neuron.activation += (neuron.targetActivation - neuron.activation) * 0.1;
+      });
+      
+      if (isPlaying) {
+        animationId = requestAnimationFrame(animate);
+      }
+    }
+    
+    function play() {
+      isPlaying = true;
+      playBtn.textContent = '暂停';
+      startTime = null;
+      currentPhase = 0;
+      updatePhase();
+      initNetwork();
+      animationId = requestAnimationFrame(animate);
+    }
+    
+    function pause() {
+      isPlaying = false;
+      playBtn.textContent = '播放';
+      if (animationId) {
+        cancelAnimationFrame(animationId);
+      }
+    }
+    
+    function reset() {
+      pause();
+      startTime = null;
+      currentPhase = 0;
+      phaseTimer = 0;
+      timelineProgress.style.width = '0%';
+      timeDisplay.textContent = '0:00 / 0:30';
+      initNetwork();
+      updatePhase();
+      
+      ctx.fillStyle = '#050505';
+      ctx.fillRect(0, 0, W, H);
+      
+      // Draw initial state
+      neurons.forEach(neuron => {
+        ctx.beginPath();
+        ctx.arc(neuron.x, neuron.y, neuron.radius, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.1)';
+        ctx.fill();
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
+        ctx.lineWidth = 1;
+        ctx.stroke();
+      });
+      
+      connections.forEach(conn => {
+        const from = neurons[conn.from];
+        const to = neurons[conn.to];
+        ctx.beginPath();
+        ctx.moveTo(from.x, from.y);
+        ctx.lineTo(to.x, to.y);
+        ctx.strokeStyle = `rgba(74, 108, 247, ${conn.weight * 0.3})`;
+        ctx.lineWidth = conn.weight * 2;
+        ctx.stroke();
+      });
+    }
+    
+    playBtn.addEventListener('click', () => {
+      if (isPlaying) {
+        pause();
+      } else {
+        play();
+      }
+    });
+    
+    resetBtn.addEventListener('click', reset);
+    
+    // Initial draw
+    reset();
+  </script>
+</body>
+</html>

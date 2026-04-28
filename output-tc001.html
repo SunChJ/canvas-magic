@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SaaS 登录页 - 3个风格方向</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;700&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    body {
+      font-family: 'Noto Sans SC', -apple-system, sans-serif;
+      background: #f5f5f5;
+      min-height: 100vh;
+    }
+    
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 40px 20px;
+    }
+    
+    .header {
+      text-align: center;
+      margin-bottom: 60px;
+    }
+    
+    .header h1 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 36px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 16px;
+    }
+    
+    .header p {
+      font-size: 16px;
+      color: #666;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    
+    .variations {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 30px;
+    }
+    
+    .variation {
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.1);
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    
+    .variation:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 12px 40px rgba(0,0,0,0.15);
+    }
+    
+    .variation-label {
+      padding: 20px 24px;
+      background: #fff;
+      border-bottom: 1px solid #eee;
+    }
+    
+    .variation-label h3 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+    
+    .variation-label .reason {
+      font-size: 13px;
+      color: #888;
+      line-height: 1.6;
+    }
+    
+    .variation-label .tags {
+      display: flex;
+      gap: 8px;
+      margin-top: 12px;
+      flex-wrap: wrap;
+    }
+    
+    .tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      padding: 4px 10px;
+      border-radius: 4px;
+      background: #f0f0f0;
+      color: #666;
+    }
+    
+    .preview {
+      height: 500px;
+      overflow: hidden;
+    }
+    
+    .preview iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+    
+    /* Variation 1: Dark Luxury */
+    .v1-preview {
+      background: #050505;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 40px;
+      height: 100%;
+    }
+    
+    .v1-logo {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 28px;
+      font-weight: 700;
+      color: #EEEAF4;
+      letter-spacing: -0.02em;
+      margin-bottom: 8px;
+    }
+    
+    .v1-logo span {
+      color: #4A6CF7;
+    }
+    
+    .v1-subtitle {
+      font-size: 14px;
+      color: rgba(238,234,244,0.5);
+      margin-bottom: 40px;
+    }
+    
+    .v1-form {
+      width: 100%;
+      max-width: 360px;
+    }
+    
+    .v1-input {
+      width: 100%;
+      padding: 14px 16px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 8px;
+      color: #fff;
+      font-size: 14px;
+      margin-bottom: 12px;
+      transition: border-color 0.2s;
+    }
+    
+    .v1-input:focus {
+      outline: none;
+      border-color: #4A6CF7;
+    }
+    
+    .v1-input::placeholder {
+      color: rgba(255,255,255,0.3);
+    }
+    
+    .v1-btn {
+      width: 100%;
+      padding: 14px;
+      background: #4A6CF7;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+    }
+    
+    .v1-btn:hover {
+      background: #3a5ce5;
+    }
+    
+    .v1-btn:active {
+      transform: scale(0.98);
+    }
+    
+    .v1-divider {
+      display: flex;
+      align-items: center;
+      margin: 24px 0;
+      color: rgba(255,255,255,0.2);
+      font-size: 12px;
+    }
+    
+    .v1-divider::before,
+    .v1-divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: rgba(255,255,255,0.1);
+    }
+    
+    .v1-divider span {
+      padding: 0 12px;
+    }
+    
+    .v1-social {
+      display: flex;
+      gap: 12px;
+    }
+    
+    .v1-social-btn {
+      flex: 1;
+      padding: 12px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 8px;
+      color: #fff;
+      font-size: 13px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    
+    .v1-social-btn:hover {
+      background: rgba(255,255,255,0.1);
+    }
+    
+    .v1-footer {
+      margin-top: 32px;
+      font-size: 13px;
+      color: rgba(255,255,255,0.4);
+    }
+    
+    .v1-footer a {
+      color: #4A6CF7;
+      text-decoration: none;
+    }
+    
+    /* Variation 2: Minimal Light */
+    .v2-preview {
+      background: #ffffff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 40px;
+      height: 100%;
+    }
+    
+    .v2-logo {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 28px;
+      font-weight: 700;
+      color: #111;
+      letter-spacing: -0.02em;
+      margin-bottom: 8px;
+    }
+    
+    .v2-subtitle {
+      font-size: 14px;
+      color: #888;
+      margin-bottom: 40px;
+    }
+    
+    .v2-form {
+      width: 100%;
+      max-width: 360px;
+    }
+    
+    .v2-label {
+      display: block;
+      font-size: 13px;
+      font-weight: 500;
+      color: #555;
+      margin-bottom: 6px;
+    }
+    
+    .v2-input {
+      width: 100%;
+      padding: 12px 14px;
+      background: #f8f8f8;
+      border: 1px solid #e0e0e0;
+      border-radius: 6px;
+      font-size: 14px;
+      margin-bottom: 16px;
+      transition: border-color 0.2s, background 0.2s;
+    }
+    
+    .v2-input:focus {
+      outline: none;
+      border-color: #111;
+      background: #fff;
+    }
+    
+    .v2-btn {
+      width: 100%;
+      padding: 13px;
+      background: #111;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    
+    .v2-btn:hover {
+      background: #333;
+    }
+    
+    .v2-links {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 16px;
+      font-size: 13px;
+    }
+    
+    .v2-links a {
+      color: #888;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    
+    .v2-links a:hover {
+      color: #111;
+    }
+    
+    .v2-footer {
+      margin-top: 40px;
+      font-size: 13px;
+      color: #999;
+    }
+    
+    /* Variation 3: Warm Organic */
+    .v3-preview {
+      background: #F4F1E9;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 40px;
+      height: 100%;
+    }
+    
+    .v3-logo {
+      font-family: 'Georgia', serif;
+      font-size: 28px;
+      font-weight: 700;
+      color: #1a1a16;
+      letter-spacing: -0.01em;
+      margin-bottom: 8px;
+    }
+    
+    .v3-subtitle {
+      font-size: 14px;
+      color: #8a8a82;
+      margin-bottom: 40px;
+      font-style: italic;
+    }
+    
+    .v3-form {
+      width: 100%;
+      max-width: 360px;
+    }
+    
+    .v3-input {
+      width: 100%;
+      padding: 14px 16px;
+      background: rgba(255,255,255,0.6);
+      border: 1px solid rgba(0,0,0,0.1);
+      border-radius: 4px;
+      font-size: 14px;
+      margin-bottom: 12px;
+      transition: border-color 0.2s, background 0.2s;
+    }
+    
+    .v3-input:focus {
+      outline: none;
+      border-color: #2d4a1e;
+      background: rgba(255,255,255,0.9);
+    }
+    
+    .v3-input::placeholder {
+      color: #aaa;
+    }
+    
+    .v3-btn {
+      width: 100%;
+      padding: 14px;
+      background: #2d4a1e;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      font-size: 15px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    
+    .v3-btn:hover {
+      background: #3d6a2e;
+    }
+    
+    .v3-divider {
+      display: flex;
+      align-items: center;
+      margin: 24px 0;
+      color: #aaa;
+      font-size: 12px;
+      font-style: italic;
+    }
+    
+    .v3-divider::before,
+    .v3-divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: rgba(0,0,0,0.1);
+    }
+    
+    .v3-divider span {
+      padding: 0 12px;
+    }
+    
+    .v3-social {
+      display: flex;
+      gap: 12px;
+    }
+    
+    .v3-social-btn {
+      flex: 1;
+      padding: 12px;
+      background: transparent;
+      border: 1px solid rgba(0,0,0,0.15);
+      border-radius: 4px;
+      color: #1a1a16;
+      font-size: 13px;
+      cursor: pointer;
+      transition: background 0.2s, border-color 0.2s;
+    }
+    
+    .v3-social-btn:hover {
+      background: rgba(0,0,0,0.05);
+      border-color: rgba(0,0,0,0.3);
+    }
+    
+    .v3-footer {
+      margin-top: 32px;
+      font-size: 13px;
+      color: #8a8a82;
+    }
+    
+    .v3-footer a {
+      color: #2d4a1e;
+      text-decoration: none;
+    }
+    
+    /* Summary */
+    .summary {
+      margin-top: 60px;
+      padding: 40px;
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+    }
+    
+    .summary h2 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 24px;
+      font-weight: 600;
+      margin-bottom: 24px;
+    }
+    
+    .comparison {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+    
+    .comparison-item h4 {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 12px;
+      color: #333;
+    }
+    
+    .comparison-item ul {
+      list-style: none;
+      font-size: 14px;
+      color: #666;
+      line-height: 1.8;
+    }
+    
+    .comparison-item li::before {
+      content: '→ ';
+      color: #999;
+    }
+    
+    @media (max-width: 1200px) {
+      .variations {
+        grid-template-columns: 1fr;
+      }
+      
+      .comparison {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>SaaS 登录页 — 3个风格方向</h1>
+      <p>同一个需求，三种不同的设计语言。每个方向都有明确的设计理由和适用场景。</p>
+    </div>
+    
+    <div class="variations">
+      <!-- Variation 1: Dark Luxury -->
+      <div class="variation">
+        <div class="variation-label">
+          <h3>方向A: Dark Luxury</h3>
+          <div class="reason">深色背景营造高级感，适合 B2B SaaS、AI 工具、技术产品。电光蓝作为强调色，传递专业与创新。</div>
+          <div class="tags">
+            <span class="tag">深色主题</span>
+            <span class="tag">高级感</span>
+            <span class="tag">B2B</span>
+            <span class="tag">AI 产品</span>
+          </div>
+        </div>
+        <div class="preview">
+          <div class="v1-preview">
+            <div class="v1-logo">Data<span>Flow</span></div>
+            <div class="v1-subtitle">智能数据分析平台</div>
+            <form class="v1-form" onsubmit="event.preventDefault()">
+              <input type="email" class="v1-input" placeholder="工作邮箱">
+              <input type="password" class="v1-input" placeholder="密码">
+              <button type="submit" class="v1-btn">登录</button>
+            </form>
+            <div class="v1-divider"><span>或</span></div>
+            <div class="v1-social">
+              <button class="v1-social-btn">GitHub</button>
+              <button class="v1-social-btn">Google</button>
+            </div>
+            <div class="v1-footer">还没有账号？<a href="#">免费注册</a></div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Variation 2: Minimal Light -->
+      <div class="variation">
+        <div class="variation-label">
+          <h3>方向B: Minimal Light</h3>
+          <div class="reason">极简白色背景，聚焦内容本身。适合效率工具、设计软件、面向个人用户的产品。清晰、无干扰。</div>
+          <div class="tags">
+            <span class="tag">极简</span>
+            <span class="tag">白色主题</span>
+            <span class="tag">效率工具</span>
+            <span class="tag">个人用户</span>
+          </div>
+        </div>
+        <div class="preview">
+          <div class="v2-preview">
+            <div class="v2-logo">Noteflow</div>
+            <div class="v2-subtitle">让思考更清晰</div>
+            <form class="v2-form" onsubmit="event.preventDefault()">
+              <label class="v2-label">邮箱</label>
+              <input type="email" class="v2-input" placeholder="your@email.com">
+              <label class="v2-label">密码</label>
+              <input type="password" class="v2-input" placeholder="输入密码">
+              <button type="submit" class="v2-btn">登录</button>
+            </form>
+            <div class="v2-links">
+              <a href="#">忘记密码？</a>
+              <a href="#">创建账号</a>
+            </div>
+            <div class="v2-footer">© 2026 Noteflow. All rights reserved.</div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Variation 3: Warm Organic -->
+      <div class="variation">
+        <div class="variation-label">
+          <h3>方向C: Warm Organic</h3>
+          <div class="reason">温暖的奶油色调，亲和力强。适合健康、教育、生活类 SaaS。自然绿色点缀，传递信任与成长。</div>
+          <div class="tags">
+            <span class="tag">温暖</span>
+            <span class="tag">亲和力</span>
+            <span class="tag">健康/教育</span>
+            <span class="tag">自然</span>
+          </div>
+        </div>
+        <div class="preview">
+          <div class="v3-preview">
+            <div class="v3-logo">GrowSpace</div>
+            <div class="v3-subtitle">你的成长伙伴</div>
+            <form class="v3-form" onsubmit="event.preventDefault()">
+              <input type="email" class="v3-input" placeholder="邮箱地址">
+              <input type="password" class="v3-input" placeholder="密码">
+              <button type="submit" class="v3-btn">登录</button>
+            </form>
+            <div class="v3-divider"><span>或者</span></div>
+            <div class="v3-social">
+              <button class="v3-social-btn">微信</button>
+              <button class="v3-social-btn">Apple</button>
+            </div>
+            <div class="v3-footer">新用户？<a href="#">注册账号</a></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="summary">
+      <h2>设计决策对比</h2>
+      <div class="comparison">
+        <div class="comparison-item">
+          <h4>Dark Luxury</h4>
+          <ul>
+            <li>深色背景 #050505</li>
+            <li>电光蓝强调 #4A6CF7</li>
+            <li>Space Grotesk 字体</li>
+            <li>适合技术/B2B 场景</li>
+            <li>营造专业高级感</li>
+          </ul>
+        </div>
+        <div class="comparison-item">
+          <h4>Minimal Light</h4>
+          <ul>
+            <li>纯白背景 #ffffff</li>
+            <li>纯黑文字 #111111</li>
+            <li>无装饰，极简主义</li>
+            <li>适合效率/设计工具</li>
+            <li>聚焦内容本身</li>
+          </ul>
+        </div>
+        <div class="comparison-item">
+          <h4>Warm Organic</h4>
+          <ul>
+            <li>奶油背景 #F4F1E9</li>
+            <li>自然绿强调 #2d4a1e</li>
+            <li>Serif 字体增加温度</li>
+            <li>适合健康/教育场景</li>
+            <li>传递信任与亲和</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

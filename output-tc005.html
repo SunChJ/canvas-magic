@@ -1,0 +1,825 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>读书笔记 App 原型</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Noto+Serif+SC:wght@400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;700&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    body {
+      font-family: 'Noto Sans SC', -apple-system, sans-serif;
+      background: #f5f0eb;
+      min-height: 100vh;
+      padding: 40px 20px;
+    }
+    
+    .header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+    
+    .header h1 {
+      font-family: 'Noto Serif SC', serif;
+      font-size: 36px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 8px;
+      color: #1a1a16;
+    }
+    
+    .header p {
+      font-size: 16px;
+      color: #8a8a82;
+    }
+    
+    .screens {
+      display: flex;
+      gap: 24px;
+      overflow-x: auto;
+      padding-bottom: 20px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    
+    .screen {
+      flex-shrink: 0;
+      width: 300px;
+      background: #fff;
+      border-radius: 40px;
+      overflow: hidden;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.08);
+      border: 8px solid #1a1a1a;
+    }
+    
+    .screen-header {
+      padding: 12px 16px;
+      background: #1a1a1a;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .screen-time {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 14px;
+      font-weight: 600;
+      color: #fff;
+    }
+    
+    .screen-notch {
+      width: 120px;
+      height: 28px;
+      background: #000;
+      border-radius: 0 0 16px 16px;
+    }
+    
+    .screen-status {
+      display: flex;
+      gap: 6px;
+    }
+    
+    .screen-status span {
+      font-size: 12px;
+      color: #fff;
+    }
+    
+    .screen-content {
+      height: 580px;
+      overflow-y: auto;
+    }
+    
+    .screen-label {
+      text-align: center;
+      margin-top: 12px;
+      font-family: 'Noto Serif SC', serif;
+      font-size: 14px;
+      font-weight: 600;
+      color: #1a1a16;
+    }
+    
+    .screen-sublabel {
+      text-align: center;
+      font-size: 12px;
+      color: #8a8a82;
+      margin-top: 4px;
+    }
+    
+    /* Screen 1: Bookshelf */
+    .bookshelf {
+      background: #f8f6f3;
+    }
+    
+    .bookshelf-header {
+      padding: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .bookshelf-title {
+      font-family: 'Noto Serif SC', serif;
+      font-size: 24px;
+      font-weight: 700;
+      color: #1a1a16;
+    }
+    
+    .bookshelf-add {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: #2d4a1e;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+    }
+    
+    .reading-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      padding: 0 20px 20px;
+    }
+    
+    .reading-stat {
+      background: #fff;
+      border-radius: 12px;
+      padding: 16px;
+      text-align: center;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+    }
+    
+    .reading-stat-value {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 24px;
+      font-weight: 700;
+      color: #2d4a1e;
+    }
+    
+    .reading-stat-label {
+      font-size: 11px;
+      color: #8a8a82;
+      margin-top: 4px;
+    }
+    
+    .book-list {
+      padding: 0 20px;
+    }
+    
+    .book-item {
+      display: flex;
+      gap: 16px;
+      padding: 16px;
+      background: #fff;
+      border-radius: 12px;
+      margin-bottom: 12px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+    }
+    
+    .book-cover {
+      width: 60px;
+      height: 80px;
+      border-radius: 4px;
+      flex-shrink: 0;
+    }
+    
+    .book-info {
+      flex: 1;
+    }
+    
+    .book-title {
+      font-family: 'Noto Serif SC', serif;
+      font-size: 15px;
+      font-weight: 600;
+      color: #1a1a16;
+      margin-bottom: 4px;
+    }
+    
+    .book-author {
+      font-size: 12px;
+      color: #8a8a82;
+      margin-bottom: 8px;
+    }
+    
+    .book-progress {
+      height: 4px;
+      background: #e8e4df;
+      border-radius: 2px;
+      overflow: hidden;
+    }
+    
+    .book-progress-bar {
+      height: 100%;
+      background: #2d4a1e;
+      border-radius: 2px;
+    }
+    
+    .book-progress-text {
+      font-size: 11px;
+      color: #8a8a82;
+      margin-top: 4px;
+    }
+    
+    /* Screen 2: Note Detail */
+    .note-detail {
+      background: #f8f6f3;
+    }
+    
+    .note-detail-header {
+      padding: 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    
+    .back-btn {
+      font-size: 20px;
+      color: #2d4a1e;
+    }
+    
+    .note-detail-title {
+      font-family: 'Noto Serif SC', serif;
+      font-size: 18px;
+      font-weight: 600;
+    }
+    
+    .note-card {
+      margin: 0 20px 16px;
+      background: #fff;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+    }
+    
+    .note-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+    
+    .note-card-book {
+      font-size: 12px;
+      color: #8a8a82;
+    }
+    
+    .note-card-date {
+      font-size: 12px;
+      color: #8a8a82;
+    }
+    
+    .note-card-content {
+      font-family: 'Noto Serif SC', serif;
+      font-size: 15px;
+      line-height: 1.8;
+      color: #1a1a16;
+      margin-bottom: 12px;
+    }
+    
+    .note-card-content em {
+      color: #2d4a1e;
+      font-style: normal;
+      background: rgba(45,74,30,0.1);
+      padding: 0 4px;
+      border-radius: 2px;
+    }
+    
+    .note-card-tags {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    
+    .tag {
+      font-size: 12px;
+      padding: 4px 10px;
+      background: #f0ebe5;
+      border-radius: 4px;
+      color: #8a8a82;
+    }
+    
+    /* Screen 3: Highlight */
+    .highlight {
+      background: #f8f6f3;
+    }
+    
+    .highlight-header {
+      padding: 20px;
+      text-align: center;
+    }
+    
+    .highlight-title {
+      font-family: 'Noto Serif SC', serif;
+      font-size: 18px;
+      font-weight: 600;
+    }
+    
+    .highlight-card {
+      margin: 0 20px 16px;
+      background: #fff;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+      border-left: 4px solid #C9A84C;
+    }
+    
+    .highlight-text {
+      font-family: 'Noto Serif SC', serif;
+      font-size: 16px;
+      line-height: 1.8;
+      color: #1a1a16;
+      font-style: italic;
+      margin-bottom: 12px;
+    }
+    
+    .highlight-source {
+      font-size: 12px;
+      color: #8a8a82;
+    }
+    
+    .highlight-actions {
+      display: flex;
+      gap: 12px;
+      margin-top: 12px;
+    }
+    
+    .highlight-action {
+      font-size: 12px;
+      padding: 6px 12px;
+      background: #f0ebe5;
+      border-radius: 4px;
+      color: #8a8a82;
+    }
+    
+    /* Screen 4: Search */
+    .search {
+      background: #f8f6f3;
+    }
+    
+    .search-header {
+      padding: 20px;
+    }
+    
+    .search-input {
+      width: 100%;
+      padding: 14px 16px;
+      background: #fff;
+      border: 1px solid #e8e4df;
+      border-radius: 10px;
+      font-size: 15px;
+      color: #1a1a16;
+    }
+    
+    .search-input::placeholder {
+      color: #8a8a82;
+    }
+    
+    .search-results {
+      padding: 0 20px;
+    }
+    
+    .search-result {
+      padding: 16px;
+      background: #fff;
+      border-radius: 12px;
+      margin-bottom: 12px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+    }
+    
+    .search-result-title {
+      font-family: 'Noto Serif SC', serif;
+      font-size: 15px;
+      font-weight: 600;
+      color: #1a1a16;
+      margin-bottom: 4px;
+    }
+    
+    .search-result-book {
+      font-size: 12px;
+      color: #8a8a82;
+      margin-bottom: 8px;
+    }
+    
+    .search-result-text {
+      font-size: 14px;
+      line-height: 1.6;
+      color: #666;
+    }
+    
+    .search-result-text em {
+      color: #2d4a1e;
+      font-style: normal;
+      background: rgba(45,74,30,0.1);
+      padding: 0 2px;
+      border-radius: 2px;
+    }
+    
+    /* Screen 5: Notebook Management */
+    .notebooks {
+      background: #f8f6f3;
+    }
+    
+    .notebooks-header {
+      padding: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .notebooks-title {
+      font-family: 'Noto Serif SC', serif;
+      font-size: 18px;
+      font-weight: 600;
+    }
+    
+    .notebook-list {
+      padding: 0 20px;
+    }
+    
+    .notebook-item {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 16px;
+      background: #fff;
+      border-radius: 12px;
+      margin-bottom: 12px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+    }
+    
+    .notebook-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+    }
+    
+    .notebook-info {
+      flex: 1;
+    }
+    
+    .notebook-name {
+      font-family: 'Noto Serif SC', serif;
+      font-size: 15px;
+      font-weight: 600;
+      color: #1a1a16;
+      margin-bottom: 4px;
+    }
+    
+    .notebook-count {
+      font-size: 12px;
+      color: #8a8a82;
+    }
+    
+    .notebook-arrow {
+      color: #ccc;
+    }
+    
+    /* Bottom Nav */
+    .bottom-nav {
+      display: flex;
+      justify-content: space-around;
+      padding: 12px 0;
+      background: #fff;
+      border-top: 1px solid #f0ebe5;
+      margin-top: auto;
+    }
+    
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      font-size: 11px;
+      color: #8a8a82;
+    }
+    
+    .nav-item.active {
+      color: #2d4a1e;
+    }
+    
+    .nav-icon {
+      font-size: 20px;
+    }
+    
+    @media (max-width: 1200px) {
+      .screens {
+        justify-content: flex-start;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>读书笔记 App 原型</h1>
+    <p>5 个核心屏幕 · 内容展示类 · Serif 字体优先</p>
+  </div>
+  
+  <div class="screens">
+    <!-- Screen 1: Bookshelf -->
+    <div>
+      <div class="screen">
+        <div class="screen-header">
+          <span class="screen-time">9:41</span>
+          <div class="screen-notch"></div>
+          <div class="screen-status">
+            <span>📶</span>
+            <span>🔋</span>
+          </div>
+        </div>
+        <div class="screen-content bookshelf">
+          <div class="bookshelf-header">
+            <span class="bookshelf-title">我的书架</span>
+            <span class="bookshelf-add">+</span>
+          </div>
+          <div class="reading-stats">
+            <div class="reading-stat">
+              <div class="reading-stat-value">12</div>
+              <div class="reading-stat-label">在读</div>
+            </div>
+            <div class="reading-stat">
+              <div class="reading-stat-value">48</div>
+              <div class="reading-stat-label">已读</div>
+            </div>
+            <div class="reading-stat">
+              <div class="reading-stat-value">156</div>
+              <div class="reading-stat-label">笔记</div>
+            </div>
+          </div>
+          <div class="book-list">
+            <div class="book-item">
+              <div class="book-cover" style="background: linear-gradient(135deg, #2d4a1e, #4CAF50);"></div>
+              <div class="book-info">
+                <div class="book-title">思考，快与慢</div>
+                <div class="book-author">丹尼尔·卡尼曼</div>
+                <div class="book-progress">
+                  <div class="book-progress-bar" style="width: 65%;"></div>
+                </div>
+                <div class="book-progress-text">65% · 23 条笔记</div>
+              </div>
+            </div>
+            <div class="book-item">
+              <div class="book-cover" style="background: linear-gradient(135deg, #1a1a16, #555);"></div>
+              <div class="book-info">
+                <div class="book-title">原则</div>
+                <div class="book-author">瑞·达利欧</div>
+                <div class="book-progress">
+                  <div class="book-progress-bar" style="width: 100%;"></div>
+                </div>
+                <div class="book-progress-text">100% · 45 条笔记</div>
+              </div>
+            </div>
+            <div class="book-item">
+              <div class="book-cover" style="background: linear-gradient(135deg, #C9A84C, #FFD700);"></div>
+              <div class="book-info">
+                <div class="book-title">人类简史</div>
+                <div class="book-author">尤瓦尔·赫拉利</div>
+                <div class="book-progress">
+                  <div class="book-progress-bar" style="width: 30%;"></div>
+                </div>
+                <div class="book-progress-text">30% · 8 条笔记</div>
+              </div>
+            </div>
+          </div>
+          <div class="bottom-nav">
+            <div class="nav-item active">
+              <span class="nav-icon">📚</span>
+              <span>书架</span>
+            </div>
+            <div class="nav-item">
+              <span class="nav-icon">📝</span>
+              <span>笔记</span>
+            </div>
+            <div class="nav-item">
+              <span class="nav-icon">🔍</span>
+              <span>搜索</span>
+            </div>
+            <div class="nav-item">
+              <span class="nav-icon">📁</span>
+              <span>笔记本</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="screen-label">书架</div>
+      <div class="screen-sublabel">书籍列表 + 阅读统计</div>
+    </div>
+    
+    <!-- Screen 2: Note Detail -->
+    <div>
+      <div class="screen">
+        <div class="screen-header">
+          <span class="screen-time">9:41</span>
+          <div class="screen-notch"></div>
+          <div class="screen-status">
+            <span>📶</span>
+            <span>🔋</span>
+          </div>
+        </div>
+        <div class="screen-content note-detail">
+          <div class="note-detail-header">
+            <span class="back-btn">←</span>
+            <span class="note-detail-title">笔记详情</span>
+          </div>
+          <div class="note-card">
+            <div class="note-card-header">
+              <span class="note-card-book">《思考，快与慢》</span>
+              <span class="note-card-date">2026-04-28</span>
+            </div>
+            <div class="note-card-content">
+              <em>系统1</em>的运行是无意识且快速的，不怎么费脑力，没有感觉，完全处于自主控制状态。
+              <br><br>
+              <em>系统2</em>将注意力转移到需要费脑力的大脑活动上来，例如复杂的运算。
+            </div>
+            <div class="note-card-tags">
+              <span class="tag">认知心理学</span>
+              <span class="tag">思维方式</span>
+              <span class="tag">决策</span>
+            </div>
+          </div>
+          <div class="note-card">
+            <div class="note-card-header">
+              <span class="note-card-book">《思考，快与慢》</span>
+              <span class="note-card-date">2026-04-27</span>
+            </div>
+            <div class="note-card-content">
+              人类的<em>直觉</em>存在系统性偏差，我们倾向于用简单的答案来回答复杂的问题。
+            </div>
+            <div class="note-card-tags">
+              <span class="tag">直觉</span>
+              <span class="tag">偏差</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="screen-label">笔记详情</div>
+      <div class="screen-sublabel">引文 + 标签</div>
+    </div>
+    
+    <!-- Screen 3: Highlight -->
+    <div>
+      <div class="screen">
+        <div class="screen-header">
+          <span class="screen-time">9:41</span>
+          <div class="screen-notch"></div>
+          <div class="screen-status">
+            <span>📶</span>
+            <span>🔋</span>
+          </div>
+        </div>
+        <div class="screen-content highlight">
+          <div class="highlight-header">
+            <div class="highlight-title">标注高亮</div>
+          </div>
+          <div class="highlight-card">
+            <div class="highlight-text">
+              "我们总是高估自己对世界的了解，却低估了事件中的偶然性。"
+            </div>
+            <div class="highlight-source">— 《思考，快与慢》 第 2 章</div>
+            <div class="highlight-actions">
+              <span class="highlight-action">📝 添加笔记</span>
+              <span class="highlight-action">🔗 分享</span>
+            </div>
+          </div>
+          <div class="highlight-card">
+            <div class="highlight-text">
+              "如果你想要一个好答案，就要问一个好问题。"
+            </div>
+            <div class="highlight-source">— 《原则》 第 5 章</div>
+            <div class="highlight-actions">
+              <span class="highlight-action">📝 添加笔记</span>
+              <span class="highlight-action">🔗 分享</span>
+            </div>
+          </div>
+          <div class="highlight-card">
+            <div class="highlight-text">
+              "历史的铁律就是：事后看来不可避免的事情，在发生之前都是不可想象的。"
+            </div>
+            <div class="highlight-source">— 《人类简史》 第 10 章</div>
+            <div class="highlight-actions">
+              <span class="highlight-action">📝 添加笔记</span>
+              <span class="highlight-action">🔗 分享</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="screen-label">标注高亮</div>
+      <div class="screen-sublabel">引文收藏 + 来源</div>
+    </div>
+    
+    <!-- Screen 4: Search -->
+    <div>
+      <div class="screen">
+        <div class="screen-header">
+          <span class="screen-time">9:41</span>
+          <div class="screen-notch"></div>
+          <div class="screen-status">
+            <span>📶</span>
+            <span>🔋</span>
+          </div>
+        </div>
+        <div class="screen-content search">
+          <div class="search-header">
+            <input type="text" class="search-input" placeholder="搜索笔记、引文、标签...">
+          </div>
+          <div class="search-results">
+            <div class="search-result">
+              <div class="search-result-title">系统1和系统2</div>
+              <div class="search-result-book">《思考，快与慢》</div>
+              <div class="search-result-text">
+                <em>系统1</em>的运行是无意识且快速的...<em>系统2</em>将注意力转移到需要费脑力的大脑活动上来...
+              </div>
+            </div>
+            <div class="search-result">
+              <div class="search-result-title">直觉的局限性</div>
+              <div class="search-result-book">《思考，快与慢》</div>
+              <div class="search-result-text">
+                人类的<em>直觉</em>存在系统性偏差...
+              </div>
+            </div>
+            <div class="search-result">
+              <div class="search-result-title">决策框架</div>
+              <div class="search-result-book">《原则》</div>
+              <div class="search-result-text">
+                建立一套<em>决策框架</em>，让每一次选择都有据可依...
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="screen-label">搜索</div>
+      <div class="screen-sublabel">全文搜索 + 结果高亮</div>
+    </div>
+    
+    <!-- Screen 5: Notebook Management -->
+    <div>
+      <div class="screen">
+        <div class="screen-header">
+          <span class="screen-time">9:41</span>
+          <div class="screen-notch"></div>
+          <div class="screen-status">
+            <span>📶</span>
+            <span>🔋</span>
+          </div>
+        </div>
+        <div class="screen-content notebooks">
+          <div class="notebooks-header">
+            <span class="notebooks-title">笔记本管理</span>
+            <span style="color: #2d4a1e; font-size: 14px;">编辑</span>
+          </div>
+          <div class="notebook-list">
+            <div class="notebook-item">
+              <div class="notebook-icon" style="background: #e8f5e9;">🧠</div>
+              <div class="notebook-info">
+                <div class="notebook-name">认知科学</div>
+                <div class="notebook-count">3 本书 · 45 条笔记</div>
+              </div>
+              <span class="notebook-arrow">→</span>
+            </div>
+            <div class="notebook-item">
+              <div class="notebook-icon" style="background: #fff3e0;">💼</div>
+              <div class="notebook-info">
+                <div class="notebook-name">商业思维</div>
+                <div class="notebook-count">5 本书 · 78 条笔记</div>
+              </div>
+              <span class="notebook-arrow">→</span>
+            </div>
+            <div class="notebook-item">
+              <div class="notebook-icon" style="background: #e3f2fd;">📖</div>
+              <div class="notebook-info">
+                <div class="notebook-name">历史人文</div>
+                <div class="notebook-count">2 本书 · 23 条笔记</div>
+              </div>
+              <span class="notebook-arrow">→</span>
+            </div>
+            <div class="notebook-item">
+              <div class="notebook-icon" style="background: #fce4ec;">🎯</div>
+              <div class="notebook-info">
+                <div class="notebook-name">个人成长</div>
+                <div class="notebook-count">4 本书 · 56 条笔记</div>
+              </div>
+              <span class="notebook-arrow">→</span>
+            </div>
+            <div class="notebook-item">
+              <div class="notebook-icon" style="background: #f3e5f5;">🔬</div>
+              <div class="notebook-info">
+                <div class="notebook-name">科技前沿</div>
+                <div class="notebook-count">3 本书 · 34 条笔记</div>
+              </div>
+              <span class="notebook-arrow">→</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="screen-label">笔记本管理</div>
+      <div class="screen-sublabel">分类整理</div>
+    </div>
+  </div>
+</body>
+</html>
